@@ -62,6 +62,8 @@ Audio is **not** included. The de‑identified human recordings are released as 
 voices come from ElevenLabs. The CSVs in `results/` hold everything needed to reproduce the figures. See `.env.example`
 for the credentials required to download the corpus or regenerate audio.
 
+Human‑corpus participant names are replaced with stable IDs (`speaker_01`, …) throughout the CSVs and notebooks — including model‑output text, where speakers' self‑introductions are sometimes echoed — while ElevenLabs voice names and all speaker metadata are retained.
+
 ## Key figures
 
 Delivery scores fall as a speaker's pronunciation moves further from American English (XLS‑R layer‑14 DTW distance):
