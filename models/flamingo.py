@@ -82,9 +82,10 @@ def run_flamingo(audio_path: str, prompt: str) -> str:
 
 # Optional test: python models/flamingo.py
 if __name__ == "__main__":
-    audio_file = "./audio_samples/accent_archive_samples/arabic63_english19_merged.wav"
+    import sys
+    audio_file = sys.argv[1] if len(sys.argv) > 1 else "audio_samples/example.wav"
 
-    prompt = "Describe the speakers of the audio. How many speakers are there? Do they sound happy, angry, sad?"
+    prompt = "Describe the speaker's accent, clarity, and delivery."
 
     result = run_flamingo(audio_file, prompt)
     print(result)

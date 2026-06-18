@@ -12,7 +12,7 @@ PROJECT_ID = os.getenv("GEMINI_PROJECT_ID")
 SAMPLE_RATE = 16_000
 
 
-API_KEY = os.getenv("GEMINI_API_KEY_LUCY")
+API_KEY = os.getenv("GEMINI_API_KEY")
 
 
 def run_gemini(audio_input, prompt, model="gemini-2.0-flash-001", temp=0, api_key=None):
@@ -50,8 +50,9 @@ def run_gemini(audio_input, prompt, model="gemini-2.0-flash-001", temp=0, api_ke
 
 # Optional test: python models/gemini.py
 if __name__ == "__main__":
-    audio_file = "./audio_samples/accent_archive_samples/arabic63_english19_merged.wav"
+    import sys
+    audio_file = sys.argv[1] if len(sys.argv) > 1 else "audio_samples/example.wav"
     audio, sr = sf.read(audio_file, dtype="int16")
-    prompt = "Describe the speakers of the audio. How many speakers are there? Do they sound happy, angry, sad?"
-    result = run_gemini(audio, prompt, model="gemini-3-flash-preview")
+    prompt = "Describe the speaker's accent, clarity, and delivery."
+    result = run_gemini(audio, prompt, model="gemini-2.5-flash")
     print(result)

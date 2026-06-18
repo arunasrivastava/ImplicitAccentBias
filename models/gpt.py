@@ -81,9 +81,10 @@ def run_gpt(audio_input, prompt, model="gpt-4o-audio-preview", temp=0, api_key=N
 
 # Optional test: python models/gpt4o.py
 if __name__ == "__main__":
-    audio_file = "./audio_samples/accent_archive_samples/arabic63_english19_merged.wav"
+    import sys
+    audio_file = sys.argv[1] if len(sys.argv) > 1 else "audio_samples/example.wav"
     audio, sr = sf.read(audio_file, dtype="int16")
     
-    prompt = "Describe the speakers of the audio. How many speakers are there? Do they sound happy, angry, sad?"
-    result = run_gpt4o(audio, prompt, model="gpt-4o-audio-preview")
+    prompt = "Describe the speaker's accent, clarity, and delivery."
+    result = run_gpt(audio, prompt, model="gpt-4o-audio-preview")
     print(result)

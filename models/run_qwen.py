@@ -108,9 +108,10 @@ def run_qwen(audio_path: str, prompt: str) -> str:
 
 # Optional test: python models/run_qwen.py
 if __name__ == "__main__":
-    audio_file = "/gscratch/tial/sameepch/TIAL_projects/AccentEvaluation/audio_samples/accent_archive_samples/arabic63_english19_merged.wav"
+    import sys
+    audio_file = sys.argv[1] if len(sys.argv) > 1 else "audio_samples/example.wav"
 
-    prompt = "Describe the speakers of the audio. How many speakers are there? Do they sound happy, angry, sad?"
+    prompt = "Describe the speaker's accent, clarity, and delivery."
 
     thinks, answer, full_response = do_qwen3_inference(
         *load_qwen3_model(), prompt, audio_file

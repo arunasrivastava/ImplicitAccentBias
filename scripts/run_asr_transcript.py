@@ -173,9 +173,9 @@ def compute_wer(reference: str, hypothesis: str) -> tuple:
 
 def get_api_key(model: str):
     if "gemini" in model:
-        return os.getenv("GEMINI_API_KEY_LUCY") or os.getenv("GEMINI_API_KEY")
+        return os.getenv("GEMINI_API_KEY")
     if "gpt" in model:
-        return os.getenv("GPT_API_KEY") or os.getenv("OPENAI_API_KEY")
+        return os.getenv("OPENAI_API_KEY")
     return None
 
 
@@ -322,10 +322,10 @@ def main():
 
     api_key = get_api_key(args.model)
     if "gemini" in args.model and not api_key:
-        log("ERROR: no GEMINI_API_KEY_LUCY or GEMINI_API_KEY found in .env")
+        log("ERROR: no GEMINI_API_KEY found in .env")
         sys.exit(1)
     if "gpt" in args.model and not api_key:
-        log("ERROR: no GPT_API_KEY or OPENAI_API_KEY found in .env")
+        log("ERROR: no OPENAI_API_KEY found in .env")
         sys.exit(1)
     if api_key:
         log(f"API key: ...{api_key[-6:]}")
