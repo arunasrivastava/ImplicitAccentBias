@@ -41,8 +41,8 @@ fi
 API_KEY="${API_KEY:-}"
 HF_TOKEN="${HF_TOKEN:-}"
 PYTHON="${PYTHON:-python3.10}"
-# Evaluation prompts (shipped in prompts/); used for both corpus and synthetic runs.
-PROMPT_FILES="${PROMPT_FILES:-critical=prompts/prompts_two_part_rating_critical.csv ideal=prompts/prompts_two_part_rating_ideal.csv native=prompts/prompts_two_part_rating_native.csv}"
+# Evaluation prompts (shipped in data/prompts/); used for both corpus and synthetic runs.
+PROMPT_FILES="${PROMPT_FILES:-critical=data/prompts/prompts_two_part_rating_critical.csv ideal=data/prompts/prompts_two_part_rating_ideal.csv native=data/prompts/prompts_two_part_rating_native.csv}"
 
 # For synthetic eval: folder holding the ElevenLabs audio + elevenlabs_metadata.csv.
 # Audio is not shipped in this repo — download it from the multispeak Hugging Face

@@ -6,7 +6,7 @@ and three high‑stakes settings (workplace hiring, academic presentations, Engl
 Nigerian‑accented speakers than to American or British ones, and that a speaker's delivery score falls the further their
 pronunciation sits from American English (measured by XLS‑R acoustic distance). We demonstrate an implicit bias framework that analyzes biases beyond speech intelligibility, where, despite lower word error rates (<5%), models demonstrate harmful speaker profile biases. 
 
-![Study overview](figures/figure_0.png)
+![Study overview](results/figures/figure_0.png)
 
 ## Setup
 
@@ -22,15 +22,12 @@ figures from the bundled `results/` CSVs needs **neither API keys nor GPUs**.
 ## Repository map — where to run what
 
 ```
-models/               one thin wrapper per backend (audio in → text rating out)
-src/                  the experiment-running pipelines (.py) + runnable examples (.sh)
-notebooks/            ingest data + generate every figure / table
-results/              model outputs & intermediate CSVs behind every figure
-prompts/              the 1–7 rating prompts (critical / ideal / native), used in every evaluation
-human_hiring_corpus/  the scripts + unscripted prompts participants recorded (+ recording instructions)
-synthetic_voices/     ElevenLabs voice list, scripts, and metadata (see its README; audio on HF)
-figures/              the figures from the paper
-utils/                shared audio I/O helpers
+models/      one thin wrapper per backend (audio in → text rating out)
+src/         the experiment-running pipelines (.py) + runnable examples (.sh)
+notebooks/   ingest data + generate every figure / table
+data/        inputs: prompts/ (rating prompts) · human_hiring_corpus/ (scripts + recording instructions) · synthetic_voices/ (ElevenLabs voice list, scripts, metadata)
+results/     model outputs & intermediate CSVs behind every figure, plus figures/ (the paper figures)
+utils/       shared audio I/O helpers
 ```
 
 **`src/`** — each `.py` is a pipeline; the matching `.sh` just sets the model/params and runs it.
@@ -72,11 +69,11 @@ Human‑corpus participant names are replaced with stable IDs (`speaker_01`, …
 
 Delivery scores fall as a speaker's pronunciation moves further from American English (XLS‑R layer‑14 DTW distance):
 
-![Delivery vs. acoustic distance](figures/fig5_xlsr_correlation.png)
+![Delivery vs. acoustic distance](results/figures/fig5_xlsr_correlation.png)
 
 The same accent ordering holds across all three domains:
 
-![Paired bars across domains](figures/fig_paired_bars_all_domains.png)
+![Paired bars across domains](results/figures/fig_paired_bars_all_domains.png)
 
 ## Citation
 

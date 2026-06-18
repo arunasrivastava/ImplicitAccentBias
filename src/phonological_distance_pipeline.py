@@ -34,14 +34,14 @@ import torch
 ROOT = Path(__file__).resolve().parent.parent
 
 # ── Scripts ──────────────────────────────────────────────────────────────────
-# The verbatim scripted prompts live in human_hiring_corpus/scripted_scripts.csv
+# The verbatim scripted prompts live in data/human_hiring_corpus/scripted_scripts.csv
 # (one row per category). They are loaded here only to build the script vocabulary
 # used to keep in-script words from the Whisper transcription. Phonological-feature
 # categorization (consonant cluster / schwa / ...) is NOT done here — it lives in
 # the analysis notebook (notebooks/Figures_Phonolgical_Distance.ipynb).
 
 def _load_scripts():
-    with open(ROOT / "human_hiring_corpus" / "scripted_scripts.csv", newline="") as f:
+    with open(ROOT / "data" / "human_hiring_corpus" / "scripted_scripts.csv", newline="") as f:
         return {row["category"]: row["script"] for row in csv.DictReader(f)}
 
 SCRIPTS = _load_scripts()
@@ -92,28 +92,20 @@ def normalize_word(word):
 # Stage 1a: extract audio — human corpus (HuggingFace arrow cache)
 # ---------------------------------------------------------------------------
 
+# Human corpus lives in a gated HF dataset (anonymized speaker IDs). Requires
+# `huggingface_hub` login with an account that has been granted access.
+HUMAN_DATASET = "multispeak/hiring-accent-speech-human-voices"
+
+
 def stage_extract(cfg):
-    import pyarrow.ipc as ipc
+    """Pull scripted human audio for one category from the gated HF dataset -> 16 kHz mono WAVs."""
+    from datasets import load_dataset
+    import soundfile as sf
 
-    ARROW = Path.home() / ".cache/huggingface/datasets/multispeak___parquet" / \
-            "multispeak--hiring-accent-corpus-f16810540282c8f8/0.0.0" / \
-            "2a3b91fbd88a2c90d1dbbb32b460cf621d31bd5b05b934492fdef7d8d6f236ec" / \
-            "parquet-train.arrow"
-
-    if not ARROW.exists():
-        sys.exit(f"Arrow cache not found at {ARROW}. Run load_dataset first.")
-
-    import io
-    import pyarrow as pa
-
-    with open(ARROW, "rb") as f:
-        reader = ipc.open_stream(f)
-        table = reader.read_all()
-
-    df = table.to_pandas()
-    category_rows = df[df["category"] == cfg["hf_category"]].reset_index(drop=True)
-    print(f"Found {len(category_rows)} {cfg['hf_category']} rows")
-    print(category_rows["accent_nationality_origin"].value_counts().to_string())
+    print(f"Loading {HUMAN_DATASET} (gated -- requires HF access)...", flush=True)
+    ds = load_dataset(HUMAN_DATASET, split="train")
+    rows = [r for r in ds if r["category"] == cfg["hf_category"]]
+    print(f"Found {len(rows)} {cfg['hf_category']} rows")
 
     TARGET_SR = 16000
     out_dir = cfg["out"]
@@ -121,44 +113,26 @@ def stage_extract(cfg):
     wav_dir.mkdir(parents=True, exist_ok=True)
 
     meta_rows = []
-    for _, row in category_rows.iterrows():
-        audio = row["audio"]
-        speaker_id = re.sub(r"[^a-zA-Z0-9_]", "_", row["name"]).lower()
-        accent     = row["accent_nationality_origin"]
-
-        if isinstance(audio, dict):
-            raw_bytes = audio.get("bytes")
-            if raw_bytes is None:
-                print(f"  SKIP {speaker_id}: no audio bytes")
-                continue
-            import soundfile as sf
-            import io
-            try:
-                arr, sr = sf.read(io.BytesIO(raw_bytes))
-            except Exception as e:
-                print(f"  SKIP {speaker_id}: {e}")
-                continue
-        else:
-            print(f"  SKIP {speaker_id}: unexpected audio type {type(audio)}")
-            continue
-
-        # mono + resample to 16kHz
+    for r in rows:
+        speaker_id = r["speaker_id"]                     # already anonymized in the dataset
+        accent     = r["accent_nationality_origin"]
+        audio      = r["audio"]
+        arr = np.asarray(audio["array"], dtype=np.float32)
+        sr  = audio["sampling_rate"]
         if arr.ndim > 1:
             arr = arr.mean(axis=1)
         if sr != TARGET_SR:
             import librosa
-            arr = librosa.resample(arr.astype(np.float32), orig_sr=sr, target_sr=TARGET_SR)
-
-        arr = arr.astype(np.float32)
+            arr = librosa.resample(arr, orig_sr=sr, target_sr=TARGET_SR)
         out_path = wav_dir / f"{speaker_id}.wav"
-        sf.write(str(out_path), arr, TARGET_SR)
+        sf.write(str(out_path), arr.astype(np.float32), TARGET_SR)
         meta_rows.append({"speaker_id": speaker_id, "accent": accent, "wav": str(out_path)})
         print(f"  Saved {out_path.name}  ({accent})")
 
     meta_path = out_dir / "speakers.json"
     with open(meta_path, "w") as f:
         json.dump(meta_rows, f, indent=2)
-    print(f"\nSaved {len(meta_rows)} WAV files. Metadata → {meta_path}")
+    print(f"\nSaved {len(meta_rows)} WAV files. Metadata -> {meta_path}")
 
 
 # ---------------------------------------------------------------------------

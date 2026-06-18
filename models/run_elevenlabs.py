@@ -1,9 +1,9 @@
 """
 ElevenLabs text-to-speech: generate the synthetic voice set used in the study.
 
-Each voice in `synthetic_voices/speaker_ids.csv` reads every script in
-`synthetic_voices/scripts.csv`; audio is written per-speaker and a metadata CSV
-(`elevenlabs_metadata.csv`, the same schema shipped in `synthetic_voices/`) is
+Each voice in `data/synthetic_voices/speaker_ids.csv` reads every script in
+`data/synthetic_voices/scripts.csv`; audio is written per-speaker and a metadata CSV
+(`elevenlabs_metadata.csv`, the same schema shipped in `data/synthetic_voices/`) is
 produced alongside it.
 
     python models/run_elevenlabs.py            # regenerate the full set
@@ -107,10 +107,10 @@ if __name__ == "__main__":
 
     ap = argparse.ArgumentParser(description="Generate the ElevenLabs synthetic voice set.")
     ap.add_argument("--speaker_ids", type=Path,
-                    default=ROOT / "synthetic_voices" / "speaker_ids.csv",
+                    default=ROOT / "data" / "synthetic_voices" / "speaker_ids.csv",
                     help="CSV of voices (name, accent, language, gender, voice_id).")
     ap.add_argument("--scripts", type=Path,
-                    default=ROOT / "synthetic_voices" / "scripts.csv",
+                    default=ROOT / "data" / "synthetic_voices" / "scripts.csv",
                     help="CSV of scripts (category, filename, script).")
     ap.add_argument("--output_dir", type=Path,
                     default=ROOT / "audio_samples" / "elevenlabs",
