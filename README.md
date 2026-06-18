@@ -45,9 +45,8 @@ utils/       shared audio I/O helpers
 |---|---|
 | `HiringCorpus.ipynb` | Ingests the human hiring corpus and runs the model evaluations. |
 | `Phonological_Distance.ipynb` | Walkthrough of the XLS‑R distance pipeline. |
-| `Figures_EMNLP_FIG1-4.ipynb` | Delivery‑by‑model, content‑vs‑delivery, prompt‑sensitivity figures. |
-| `Figures_EMNLP_FIG5-7.ipynb` | Acoustic‑distance correlation, layer ablation, phonological‑feature breakdown, WER table. |
-| `ASR_Word_Error_Rate.ipynb` | Median WER per accent, computed from `results/asr_transcript/`. |
+| `Figures_Aggregated_Model_Biases.ipynb` | Delivery‑by‑model, content‑vs‑delivery, prompt‑sensitivity figures. |
+| `Figures_Phonolgical_Distance.ipynb` | Acoustic‑distance correlations (per‑speaker, aggregated), phonological‑feature breakdown, and the median‑WER table. |
 
 **`results/`** — `hiring_corpus/` (human, 1 file per model) · `hiring_synthetic/` (synthetic, per prompt) ·
 `immigration/`, `education/` (synthetic, per prompt × context) · `asr_transcript/` (WER) ·
