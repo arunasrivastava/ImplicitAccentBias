@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+
+# Credentials
+.env
+*service_account*.json
+
+# OS
+.DS_Store
+
+# Large local audio / intermediate artifacts (not tracked; see README on data access)
+audio_samples/
+*.wav
+*.m4a
+*.mp3
+.data/
+
+# Re-identification key — never commit
+speaker_id_map.private.csv
