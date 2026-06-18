@@ -49,6 +49,7 @@ utils/             shared audio I/O helpers
 | `Phonological_Distance.ipynb` | Walkthrough of the XLS‑R distance pipeline. |
 | `Figures_Aggregated_Model_Biases.ipynb` | Delivery‑by‑model, content‑vs‑delivery, prompt‑sensitivity figures. |
 | `Figures_Phonolgical_Distance.ipynb` | Acoustic‑distance correlations (per‑speaker, aggregated), phonological‑feature breakdown, and the median‑WER table. |
+| `HuggingFace.ipynb` | Loads the synthetic and (gated) human speech datasets from Hugging Face. |
 
 **`results/`** — `hiring_corpus/` (human, 1 file per model) · `hiring_synthetic/` (synthetic, per prompt) ·
 `immigration/`, `education/` (synthetic, per prompt × context) · `asr_transcript/` (WER) ·
@@ -57,10 +58,13 @@ utils/             shared audio I/O helpers
 
 ## Data
 
-Audio is **not** included. The de‑identified human recordings are released as a gated Hugging Face dataset; the synthetic
-voices are 30 ElevenLabs voices (see [`synthetic_voices/`](synthetic_voices/)) whose audio is hosted on the multispeak
-Hugging Face organization and can be regenerated with `python models/run_elevenlabs.py`. The CSVs in `results/` hold
-everything needed to reproduce the figures. See `.env.example` for the credentials to download the corpus or regenerate audio.
+Audio is **not** stored in this repo — it lives in two Hugging Face datasets under the multispeak organization, with
+speaker IDs matching the CSVs in `results/` (see [`notebooks/HuggingFace.ipynb`](notebooks/HuggingFace.ipynb) for loading):
+
+- [`multispeak/accent-bias-synthetic-voices`](https://huggingface.co/datasets/multispeak/accent-bias-synthetic-voices) — **public**; the 30 ElevenLabs voices (also regenerable via `python models/run_elevenlabs.py`).
+- [`multispeak/hiring-accent-speech`](https://huggingface.co/datasets/multispeak/hiring-accent-speech) — **gated** human recordings (request access). 5 of the 52 speakers are omitted here because they did not consent to recording release; their de‑identified ratings still appear in `results/`.
+
+The CSVs in `results/` hold everything needed to reproduce the figures without any audio. See `.env.example` for credentials.
 
 Human‑corpus participant names are replaced with stable IDs (`speaker_01`, …) throughout the CSVs and notebooks — including model‑output text, where speakers' self‑introductions are sometimes echoed — while ElevenLabs voice names and all speaker metadata are retained.
 
