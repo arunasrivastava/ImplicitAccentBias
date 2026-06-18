@@ -27,6 +27,7 @@ scripts/           the experiment-running pipelines (.py) + runnable examples (.
 notebooks/         ingest data + generate every figure / table
 results/           model outputs & intermediate CSVs behind every figure
 prompts/           the 1–7 rating prompts (critical / ideal / native), used in every evaluation
+human_hiring_corpus/  the scripts + unscripted prompts participants recorded (+ recording instructions)
 synthetic_voices/  ElevenLabs voice list, scripts, and metadata (see its README; audio on HF)
 figures/           the figures from the paper
 utils/             shared audio I/O helpers
