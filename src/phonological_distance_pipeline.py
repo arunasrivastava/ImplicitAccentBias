@@ -5,7 +5,9 @@ Stages:
   1. extract   – pull scripted audio from HF dataset → 16kHz mono WAV
   2. transcribe – Whisper word-level timestamps per speaker
   3. distances  – XLS-R layer-14 embeddings + DTW per word vs. American English reference
-  4. analyze    – phonological category grouping (called from notebook)
+
+Phonological-feature categorization (consonant cluster / schwa / ...) is done in the
+analysis notebook (notebooks/Figures_Phonolgical_Distance.ipynb), not here.
 
 Run a single stage:
     python3.10 src/phonological_distance_pipeline.py --stage extract --category personal-introduction
@@ -31,151 +33,43 @@ import torch
 
 ROOT = Path(__file__).resolve().parent.parent
 
-# ── Script texts ──────────────────────────────────────────────────────────────
+# ── Scripts ──────────────────────────────────────────────────────────────────
+# The verbatim scripted prompts live in human_hiring_corpus/scripted_scripts.csv
+# (one row per category). They are loaded here only to build the script vocabulary
+# used to keep in-script words from the Whisper transcription. Phonological-feature
+# categorization (consonant cluster / schwa / ...) is NOT done here — it lives in
+# the analysis notebook (notebooks/Figures_Phonolgical_Distance.ipynb).
 
-_PERSONAL_INTRO_SCRIPT = (
-    "I graduated about three years ago and I've been working in customer service "
-    "and client-facing roles since then. Most recently I was at a financial services "
-    "firm helping onboard clients and answer their questions about accounts. I really "
-    "enjoy being that connection between the technical side and clients helping people "
-    "understand their options. I think I'm a strong candidate because I have solid "
-    "experience with customers I'm getting more familiar with financial products and "
-    "I'm pretty detail-oriented which helps me catch mistakes early. I'm looking to "
-    "take on more responsibility in this kind of role."
-)
+def _load_scripts():
+    with open(ROOT / "human_hiring_corpus" / "scripted_scripts.csv", newline="") as f:
+        return {row["category"]: row["script"] for row in csv.DictReader(f)}
 
-_PERSONAL_COMMITMENT_SCRIPT = (
-    "Earlier this year I committed to finishing a client report by Thursday for a "
-    "Friday meeting, but on Wednesday my manager needed help with an urgent compliance "
-    "request that had a same-day deadline. I realized I couldn't do both well, so I "
-    "talked to my manager about prioritizing the compliance issue, and then I reached "
-    "out to the client directly to let them know the report would be a day late. I "
-    "apologized and we rescheduled the meeting to Monday. The client appreciated the "
-    "heads-up, and I got the report to them Friday afternoon. I learned it's way better "
-    "to communicate early when priorities shift rather than just missing a deadline."
-)
-
-_FINANCIAL_PRODUCT_SCRIPT = (
-    "I had a client who wanted to open a retirement account but didn't understand the "
-    "difference between a traditional IRA and a Roth IRA. I asked them some questions "
-    "about their tax situation and timeline first, then explained it as basically pay "
-    "taxes now or pay taxes later. I used a simple example with actual numbers to show "
-    "how each might work for them. I made sure to mention I wasn't giving tax advice, "
-    "just explaining the options. They had more questions so I walked through a "
-    "comparison and suggested they talk to a tax professional too. They opened a Roth "
-    "and told me later they appreciated that I explained it clearly without pushing "
-    "one option."
-)
-
-_CLIENT_DISAGREEMENT_SCRIPT = (
-    "I had a client who wanted to put a lot of their portfolio in one tech stock because "
-    "they worked in that industry and felt confident about it. I recommended more "
-    "diversification based on their risk tolerance. They pushed back because they felt "
-    "they had good insight. Instead of just agreeing or arguing, I asked them to walk "
-    "me through their thinking so I could understand it better. Then we talked through "
-    "some scenarios like what would happen if that stock dropped. I acknowledged they "
-    "knew the industry well, but explained diversification was about managing risk. We "
-    "ended up compromising, they kept a bigger position than I suggested but not as "
-    "concentrated as they wanted. They appreciated that I listened."
-)
-
-# ── Phonological categories (documentation; analysis uses notebook CATEGORIES) ─
-# Each word is listed under its primary phonological challenge category.
-# A word may appear in multiple categories if it exhibits several features.
-
-_PERSONAL_INTRO_PHON = {
-    # /aɪ/ or /eɪ/ diphthongs
-    "diphthong": ["i've", "really", "client", "clients", "onboard", "side", "options",
-                  "client-facing", "enjoy", "oriented"],
-    # unstressed vowels reduced to schwa in American stress-timed speech
-    "schwa_reduction": ["about", "been", "between", "because", "their", "pretty",
-                        "familiar", "understand", "customer", "customers"],
-    # onset or coda consonant clusters absent in CV-phonotactic L1s (e.g., Mandarin)
-    "consonant_cluster": ["graduated", "clients", "financial", "products", "detail",
-                          "services", "strength", "oriented", "experience", "recently"],
-    "content": ["graduated", "financial", "services", "technical", "mistakes",
-                "responsibility", "candidate", "experience", "customers", "products"],
-    "function": ["i", "a", "the", "and", "in", "of", "to", "at", "that", "with",
-                 "which", "this", "kind", "on", "more"],
-}
-
-_PERSONAL_COMMITMENT_PHON = {
-    # /aɪ/ + /eɪ/ diphthongs: Friday (/fr.aɪ.deɪ/), deadline (/dɛd.laɪn/),
-    #   realized (/rɪ.ə.laɪzd/), monday (/mʌn.deɪ/)
-    "diphthong": ["friday", "deadline", "realized", "monday"],
-    # initial or medial schwa: about (/ə.baʊt/), manager (/-dʒər/),
-    #   apologized (/ə.pɒl.ə.dʒaɪzd/), communicate (/kə.mjuː./), better (/bɛt.ər/)
-    "schwa_reduction": ["about", "manager", "apologized", "communicate", "better"],
-    # onset/coda clusters: compliance (/pl/), appreciated (/pr/),
-    #   priorities (/pr/), directly (/kt/ coda), request (/kw/ + /st/ coda),
-    #   afternoon (/ft/ coda-to-onset adjacency)
-    "consonant_cluster": ["compliance", "appreciated", "priorities", "directly",
-                          "request", "afternoon"],
-    "function": ["and", "then", "but", "than"],
-}
-
-_FINANCIAL_PRODUCT_PHON = {
-    # /aɪ/ or /eɪ/ diphthongs: retirement (/taɪ/), timeline (/taɪ/ twice),
-    #   situation (/eɪ/), basically (/eɪ/), advice (/aɪ/)
-    "diphthong": ["retirement", "timeline", "situation", "basically", "advice"],
-    # schwa: about (/ə.baʊt/), difference (/dɪf.ər.əns/), account (/ə.kaʊnt/),
-    #   comparison (/kəm.ˈpær.ɪ.sən/), options (/ˈɒp.ʃənz/)
-    "schwa_reduction": ["about", "difference", "account", "comparison", "options"],
-    # clusters: understand (/st/ onset + /nd/ coda), questions (/kw/ onset),
-    #   explained (/spl/ onset), professional (/pr/), suggested (/dʒ/ + /st/),
-    #   traditional (/tr/)
-    "consonant_cluster": ["understand", "questions", "explained", "professional",
-                          "suggested", "traditional"],
-    "function": ["and", "then", "between", "but"],
-}
-
-_CLIENT_DISAGREEMENT_PHON = {
-    # /oʊ/ and /aɪ/ diphthongs: portfolio (/oʊ/ twice), insight (/aɪ/),
-    #   appreciated (/eɪ/), scenarios (/oʊ/)
-    "diphthong": ["portfolio", "insight", "appreciated", "scenarios"],
-    # schwa: about, because (/bɪ.kəz/), tolerance (/tɒl.ər.əns/),
-    #   position (/pə.zɪʃ.ən/), better (/bɛt.ər/)
-    "schwa_reduction": ["about", "because", "tolerance", "position", "better"],
-    # clusters: compromising (/mpr/), concentrated (/tr/ + /nts/),
-    #   acknowledged (/kn/ onset), industry (/nd/ + /str/),
-    #   confident (/nf/ + /nt/ coda), explained (/spl/)
-    "consonant_cluster": ["compromising", "concentrated", "acknowledged", "industry",
-                          "confident", "explained"],
-    "function": ["and", "but", "then", "than"],
-}
+SCRIPTS = _load_scripts()
 
 # ── Category configurations ───────────────────────────────────────────────────
 
 CATEGORY_CONFIGS = {
     "personal-introduction": {
         "hf_category": "personal-introduction",
-        "script": _PERSONAL_INTRO_SCRIPT,
-        "phonological_categories": _PERSONAL_INTRO_PHON,
+        "script": SCRIPTS["personal-introduction"],
         "out": ROOT / "results" / "phonological_distance",
     },
     "personal-commitment": {
         "hf_category": "personal-commitment",
-        "script": _PERSONAL_COMMITMENT_SCRIPT,
-        "phonological_categories": _PERSONAL_COMMITMENT_PHON,
+        "script": SCRIPTS["personal-commitment"],
         "out": ROOT / "results" / "phonological_distance_commitment",
     },
     "financial-product": {
         "hf_category": "financial-product",
-        "script": _FINANCIAL_PRODUCT_SCRIPT,
-        "phonological_categories": _FINANCIAL_PRODUCT_PHON,
+        "script": SCRIPTS["financial-product"],
         "out": ROOT / "results" / "phonological_distance_financial",
     },
     "client-disagreement": {
         "hf_category": "client-disagreement",
-        "script": _CLIENT_DISAGREEMENT_SCRIPT,
-        "phonological_categories": _CLIENT_DISAGREEMENT_PHON,
+        "script": SCRIPTS["client-disagreement"],
         "out": ROOT / "results" / "phonological_distance_disagreement",
     },
 }
-
-# Backward-compatible module-level aliases (personal-introduction defaults)
-PERSONAL_INTRO_SCRIPT   = _PERSONAL_INTRO_SCRIPT
-PHONOLOGICAL_CATEGORIES = _PERSONAL_INTRO_PHON
 OUT      = ROOT / "results" / "phonological_distance"
 WAV_DIR  = OUT / "wav"
 TS_DIR   = OUT / "timestamps"
