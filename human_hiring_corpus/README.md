@@ -1,7 +1,7 @@
 # Human hiring corpus — scripts & prompts
 
 The exact prompts participants recorded for the human corpus
-([`multispeak/hiring-accent-speech`](https://huggingface.co/datasets/multispeak/hiring-accent-speech)).
+([`multispeak/hiring-accent-speech-human-voices`](https://huggingface.co/datasets/multispeak/hiring-accent-speech-human-voices)).
 
 | File | Contents |
 |---|---|

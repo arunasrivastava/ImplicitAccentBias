@@ -62,7 +62,7 @@ Audio is **not** stored in this repo — it lives in two Hugging Face datasets u
 speaker IDs matching the CSVs in `results/` (see [`notebooks/HuggingFace.ipynb`](notebooks/HuggingFace.ipynb) for loading):
 
 - [`multispeak/accent-bias-synthetic-voices`](https://huggingface.co/datasets/multispeak/accent-bias-synthetic-voices) — **public**; the 30 ElevenLabs voices (also regenerable via `python models/run_elevenlabs.py`).
-- [`multispeak/hiring-accent-speech`](https://huggingface.co/datasets/multispeak/hiring-accent-speech) — **gated** human recordings (request access). 5 of the 52 speakers are omitted here because they did not consent to recording release; their de‑identified ratings still appear in `results/`.
+- [`multispeak/hiring-accent-speech-human-voices`](https://huggingface.co/datasets/multispeak/hiring-accent-speech-human-voices) — **gated** human recordings (request access). 5 of the 52 speakers are omitted here because they did not consent to recording release; their de‑identified ratings still appear in `results/`.
 
 The CSVs in `results/` hold everything needed to reproduce the figures without any audio. See `.env.example` for credentials.
 
