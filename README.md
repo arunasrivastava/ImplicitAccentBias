@@ -1,15 +1,10 @@
 # Accent Evaluation — Implicit Accent Bias in Audio Language Models
 
-Audio language models (LMs) are increasingly used to judge how people speak — screening job candidates, grading oral
-exams, scoring language‑proficiency tests. This repository reproduces our study of whether those models rate English
-speakers differently *because of their accent*, across five accent groups (American, British, Chinese, Indian, Nigerian)
-and three high‑stakes settings (workplace hiring, academic presentations, English‑proficiency testing).
-
-Holding the spoken script constant, we find that several audio LMs give lower **delivery** scores to Chinese‑ and
+Audio language models (LMs) are increasingly used to judge how people speak. This repository reproduces our study of whether those models rate English
+speakers accents differently, across five accent groups (American, British, Chinese, Indian, Nigerian)
+and three high‑stakes settings (workplace hiring, academic presentations, English‑proficiency testing).We find that several frontier audio LMs give lower **delivery** scores to Chinese‑ and
 Nigerian‑accented speakers than to American or British ones, and that a speaker's delivery score falls the further their
-pronunciation sits from American English (measured by XLS‑R acoustic distance). This is not a comprehension problem: the
-same models transcribe every accent at under 5% word error rate. The penalty is in how the speech is *judged*, not
-whether it is *understood*.
+pronunciation sits from American English (measured by XLS‑R acoustic distance). We demonstrate an implicit bias framework that analyzes biases beyond speech intelligibility, where, despite lower word error rates (<5%), models demonstrate harmful speaker profile biases. 
 
 ![Study overview](figures/figure_0.png)
 
