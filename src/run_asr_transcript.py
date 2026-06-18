@@ -20,12 +20,12 @@ Audio source (automatic fallback):
      — used automatically if HuggingFace is unavailable.
 
 Usage (Gemini):
-    python3.10 scripts/run_asr_transcript.py \\
+    python3.10 src/run_asr_transcript.py \\
         --model gemini-2.5-flash \\
         --output_path results/asr_transcript/gemini-2.5-flash_asr_transcript.csv
 
 Usage (Qwen on Hyak):
-    python3.10 scripts/run_asr_transcript.py \\
+    python3.10 src/run_asr_transcript.py \\
         --model qwen \\
         --output_path results/asr_transcript/qwen_asr_transcript.csv
 

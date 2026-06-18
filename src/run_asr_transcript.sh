@@ -13,8 +13,8 @@
 # Full-transcript ASR (WER) on the scripted human hiring corpus.
 # Set MODEL below, then run. One file per model; resumable.
 #
-#   API models (run locally):  bash scripts/run_asr_transcript.sh
-#   Local models (GPU):        sbatch scripts/run_asr_transcript.sh
+#   API models (run locally):  bash src/run_asr_transcript.sh
+#   Local models (GPU):        sbatch src/run_asr_transcript.sh
 #
 # MODEL options:
 #   API:   gemini-2.5-flash, gemini-2.5-pro, gpt-audio-1.5
@@ -31,7 +31,7 @@ PYTHON="${PYTHON:-python3.10}"
 
 mkdir -p slurm results/asr_transcript
 
-"$PYTHON" scripts/run_asr_transcript.py \
+"$PYTHON" src/run_asr_transcript.py \
     --model "$MODEL" \
     --output_path "$OUT" \
     --rate_limit "$RATE"

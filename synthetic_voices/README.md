@@ -10,7 +10,7 @@ anonymization is needed.
 |---|---|
 | `speaker_ids.csv` | The 30 voices: `name, accent, language, gender, voice_id` (+ ElevenLabs voice notes). |
 | `scripts.csv` | The scripts each voice reads: `category, filename, script`. |
-| `elevenlabs_metadata.csv` | One row per generated clip (voice × script): the manifest that `scripts/run_evaluation.py` reads in synthetic mode. |
+| `elevenlabs_metadata.csv` | One row per generated clip (voice × script): the manifest that `src/run_evaluation.py` reads in synthetic mode. |
 
 **How the audio + metadata were made.** `models/run_elevenlabs.py` synthesizes every (voice × script) pair via the
 ElevenLabs API and writes the per-speaker WAVs plus `elevenlabs_metadata.csv`:

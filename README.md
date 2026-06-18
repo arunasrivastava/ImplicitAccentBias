@@ -22,18 +22,18 @@ figures from the bundled `results/` CSVs needs **neither API keys nor GPUs**.
 ## Repository map — where to run what
 
 ```
-models/            one thin wrapper per backend (audio in → text rating out)
-scripts/           the experiment-running pipelines (.py) + runnable examples (.sh)
-notebooks/         ingest data + generate every figure / table
-results/           model outputs & intermediate CSVs behind every figure
-prompts/           the 1–7 rating prompts (critical / ideal / native), used in every evaluation
+models/               one thin wrapper per backend (audio in → text rating out)
+src/                  the experiment-running pipelines (.py) + runnable examples (.sh)
+notebooks/            ingest data + generate every figure / table
+results/              model outputs & intermediate CSVs behind every figure
+prompts/              the 1–7 rating prompts (critical / ideal / native), used in every evaluation
 human_hiring_corpus/  the scripts + unscripted prompts participants recorded (+ recording instructions)
-synthetic_voices/  ElevenLabs voice list, scripts, and metadata (see its README; audio on HF)
-figures/           the figures from the paper
-utils/             shared audio I/O helpers
+synthetic_voices/     ElevenLabs voice list, scripts, and metadata (see its README; audio on HF)
+figures/              the figures from the paper
+utils/                shared audio I/O helpers
 ```
 
-**`scripts/`** — each `.py` is a pipeline; the matching `.sh` just sets the model/params and runs it.
+**`src/`** — each `.py` is a pipeline; the matching `.sh` just sets the model/params and runs it.
 
 | Experiment | Run | Notes |
 |---|---|---|
@@ -46,7 +46,6 @@ utils/             shared audio I/O helpers
 
 | Notebook | Produces |
 |---|---|
-| `HiringCorpus.ipynb` | Ingests the human hiring corpus and runs the model evaluations. |
 | `Phonological_Distance.ipynb` | Walkthrough of the XLS‑R distance pipeline. |
 | `Figures_Aggregated_Model_Biases.ipynb` | Delivery‑by‑model, content‑vs‑delivery, prompt‑sensitivity figures. |
 | `Figures_Phonolgical_Distance.ipynb` | Acoustic‑distance correlations (per‑speaker, aggregated), phonological‑feature breakdown, and the median‑WER table. |

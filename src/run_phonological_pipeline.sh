@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # XLS-R phonological-distance pipeline over all four scripted hiring categories.
-# Set SOURCE below, then run:  bash scripts/run_phonological_pipeline.sh
+# Set SOURCE below, then run:  bash src/run_phonological_pipeline.sh
 #
 #   SOURCE=human      (default) — audio pulled from the HuggingFace corpus
 #   SOURCE=synthetic            — audio from the ElevenLabs set (SYNTH_PATH)
@@ -24,7 +24,7 @@ for CAT in personal-introduction personal-commitment financial-product client-di
     echo ""; echo "──── $CAT ────"
     for STAGE in extract transcribe distances; do
         echo "  [$STAGE] $(date)"
-        "$PYTHON" scripts/phonological_distance_pipeline.py --stage "$STAGE" --category "$CAT" $EXTRA
+        "$PYTHON" src/phonological_distance_pipeline.py --stage "$STAGE" --category "$CAT" $EXTRA
     done
 done
 echo ""; echo "=== $(date) === ALL DONE ==="

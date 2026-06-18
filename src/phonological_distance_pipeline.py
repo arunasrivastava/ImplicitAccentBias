@@ -8,9 +8,9 @@ Stages:
   4. analyze    – phonological category grouping (called from notebook)
 
 Run a single stage:
-    python3.10 scripts/phonological_distance_pipeline.py --stage extract --category personal-introduction
-    python3.10 scripts/phonological_distance_pipeline.py --stage transcribe --category personal-introduction
-    python3.10 scripts/phonological_distance_pipeline.py --stage distances --category personal-introduction
+    python3.10 src/phonological_distance_pipeline.py --stage extract --category personal-introduction
+    python3.10 src/phonological_distance_pipeline.py --stage transcribe --category personal-introduction
+    python3.10 src/phonological_distance_pipeline.py --stage distances --category personal-introduction
 
 Other categories: personal-commitment, financial-product, client-disagreement
 """

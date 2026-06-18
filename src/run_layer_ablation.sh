@@ -3,7 +3,7 @@
 # four categories. Timestamps are reused from the original category directories.
 # Results written to results/layer_ablation/layer{N}/{category_suffix}/distances/
 # Output → /tmp/layer_ablation.log
-# Run with: nohup bash scripts/run_layer_ablation.sh &
+# Run with: nohup bash src/run_layer_ablation.sh &
 set -e
 cd "$(dirname "$0")/.."
 
@@ -30,7 +30,7 @@ for LAYER in "${LAYERS[@]}"; do
         SUFFIX="$(cat_suffix "$CAT")"
         DIST_OUT="results/layer_ablation/layer${LAYER}/${SUFFIX}/distances"
         echo "  [$CAT] $(date)"
-        python3.10 scripts/phonological_distance_pipeline.py \
+        python3.10 src/phonological_distance_pipeline.py \
             --stage distances \
             --category "$CAT" \
             --layer "$LAYER" \

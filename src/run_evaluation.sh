@@ -13,7 +13,7 @@ cat $0
 echo "--------------------"
 
 # -------------------------------------------------------
-# Usage: sbatch scripts/run_evaluation.sh
+# Usage: sbatch src/run_evaluation.sh
 #
 # Set MODEL and EVAL_TYPE below, then submit.
 # Resubmitting with the same OUTPUT_PATH will skip already-completed
@@ -52,14 +52,14 @@ DATASET_PATH="${DATASET_PATH:-audio_samples/elevenlabs}"
 export HF_TOKEN
 
 if [ "$EVAL_TYPE" = "corpus" ]; then
-    "$PYTHON" scripts/run_evaluation.py \
+    "$PYTHON" src/run_evaluation.py \
         --eval_type corpus \
         --model "$MODEL" \
         --output_path "$OUTPUT_PATH" \
         --prompt_files $PROMPT_FILES \
         ${API_KEY:+--api_key "$API_KEY"}
 else
-    "$PYTHON" scripts/run_evaluation.py \
+    "$PYTHON" src/run_evaluation.py \
         --eval_type synthetic \
         --model "$MODEL" \
         --dataset_path "$DATASET_PATH" \
