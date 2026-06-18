@@ -665,7 +665,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--synthetic-path",
         type=str,
-        default="audio_samples/elevenlabs_dataset4",
+        default="audio_samples/elevenlabs",
         help="Root directory of the ElevenLabs dataset (only used with --source synthetic)",
     )
     parser.add_argument(

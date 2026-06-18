@@ -10,7 +10,7 @@ set -e
 cd "$(dirname "$0")/.."
 
 SOURCE="${SOURCE:-human}"
-SYNTH_PATH="${SYNTH_PATH:-audio_samples/elevenlabs_dataset4}"
+SYNTH_PATH="${SYNTH_PATH:-audio_samples/elevenlabs}"
 SCRIPT_TYPE="${SCRIPT_TYPE:-improved}"   # synthetic only: improved | disfluent
 PYTHON="${PYTHON:-python3.10}"
 
