@@ -22,12 +22,14 @@ figures from the bundled `results/` CSVs needs **neither API keys nor GPUs**.
 ## Repository map — where to run what
 
 ```
-models/      one thin wrapper per backend (audio in → text rating out)
-scripts/     the experiment-running pipelines (.py) + runnable examples (.sh)
-notebooks/   ingest data + generate every figure / table
-results/     model outputs & intermediate CSVs behind every figure
-figures/     the figures from the paper
-utils/       shared audio I/O helpers
+models/            one thin wrapper per backend (audio in → text rating out)
+scripts/           the experiment-running pipelines (.py) + runnable examples (.sh)
+notebooks/         ingest data + generate every figure / table
+results/           model outputs & intermediate CSVs behind every figure
+prompts/           the 1–7 rating prompts (critical / ideal / native), used in every evaluation
+synthetic_voices/  ElevenLabs voice list, scripts, and metadata (see its README; audio on HF)
+figures/           the figures from the paper
+utils/             shared audio I/O helpers
 ```
 
 **`scripts/`** — each `.py` is a pipeline; the matching `.sh` just sets the model/params and runs it.
@@ -55,9 +57,10 @@ utils/       shared audio I/O helpers
 
 ## Data
 
-Audio is **not** included. The de‑identified human recordings are released as a gated Hugging Face dataset; synthetic
-voices come from ElevenLabs. The CSVs in `results/` hold everything needed to reproduce the figures. See `.env.example`
-for the credentials required to download the corpus or regenerate audio.
+Audio is **not** included. The de‑identified human recordings are released as a gated Hugging Face dataset; the synthetic
+voices are 30 ElevenLabs voices (see [`synthetic_voices/`](synthetic_voices/)) whose audio is hosted on the multispeak
+Hugging Face organization and can be regenerated with `python models/run_elevenlabs.py`. The CSVs in `results/` hold
+everything needed to reproduce the figures. See `.env.example` for the credentials to download the corpus or regenerate audio.
 
 Human‑corpus participant names are replaced with stable IDs (`speaker_01`, …) throughout the CSVs and notebooks — including model‑output text, where speakers' self‑introductions are sometimes echoed — while ElevenLabs voice names and all speaker metadata are retained.
 

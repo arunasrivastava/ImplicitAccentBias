@@ -41,7 +41,13 @@ fi
 API_KEY="${API_KEY:-}"
 HF_TOKEN="${HF_TOKEN:-}"
 PYTHON="${PYTHON:-python3.10}"
-PROMPT_FILES="${PROMPT_FILES:-critical=audio_samples/elevenlabs_dataset4/prompts_two_part_rating_critical.csv ideal=audio_samples/elevenlabs_dataset4/prompts_two_part_rating_ideal.csv native=audio_samples/elevenlabs_dataset4/prompts_two_part_rating_native.csv}"
+# Evaluation prompts (shipped in prompts/); used for both corpus and synthetic runs.
+PROMPT_FILES="${PROMPT_FILES:-critical=prompts/prompts_two_part_rating_critical.csv ideal=prompts/prompts_two_part_rating_ideal.csv native=prompts/prompts_two_part_rating_native.csv}"
+
+# For synthetic eval: folder holding the ElevenLabs audio + elevenlabs_metadata.csv.
+# Audio is not shipped in this repo — download it from the multispeak Hugging Face
+# dataset, or regenerate it with `python models/run_elevenlabs.py` (writes here).
+DATASET_PATH="${DATASET_PATH:-audio_samples/elevenlabs}"
 
 export HF_TOKEN
 
@@ -50,15 +56,13 @@ if [ "$EVAL_TYPE" = "corpus" ]; then
         --eval_type corpus \
         --model "$MODEL" \
         --output_path "$OUTPUT_PATH" \
-        --prompt_files \
-            critical=audio_samples/elevenlabs_dataset4/prompts_two_part_rating_critical.csv \
-            ideal=audio_samples/elevenlabs_dataset4/prompts_two_part_rating_ideal.csv \
-            native=audio_samples/elevenlabs_dataset4/prompts_two_part_rating_native.csv
+        --prompt_files $PROMPT_FILES \
+        ${API_KEY:+--api_key "$API_KEY"}
 else
     "$PYTHON" scripts/run_evaluation.py \
         --eval_type synthetic \
         --model "$MODEL" \
-        --dataset_path "audio_samples/elevenlabs_dataset4" \
+        --dataset_path "$DATASET_PATH" \
         --prompt_files $PROMPT_FILES \
         --output_path "$OUTPUT_PATH" \
         ${API_KEY:+--api_key "$API_KEY"}
