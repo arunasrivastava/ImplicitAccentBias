@@ -1,4 +1,4 @@
-# Accent Evaluation — Implicit Accent Bias in Audio Language Models
+# The Cost of Sounding Different: Accent Bias in Audio Language Models
 
 Audio language models (LMs) are increasingly used to judge how people speak. This repository reproduces our study of whether those models rate English
 speakers accents differently, across five accent groups (American, British, Chinese, Indian, Nigerian)
