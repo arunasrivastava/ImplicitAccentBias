@@ -47,6 +47,7 @@ utils/       shared audio I/O helpers
 | `Figures_Aggregated_Model_Biases.ipynb` | Delivery‑by‑model, content‑vs‑delivery, prompt‑sensitivity figures. |
 | `Figures_Phonolgical_Distance.ipynb` | Acoustic‑distance correlations (per‑speaker, aggregated), phonological‑feature breakdown, and the median‑WER table. |
 | `HuggingFace.ipynb` | Loads the synthetic and (gated) human speech datasets from Hugging Face. |
+| `Figures_Domain_Penalties.ipynb` | Cross-domain framing (paper Fig 2), hiring content-vs-delivery by accent (Fig 3), all-domains stacked (Fig 9). |
 
 **`results/`** — `hiring_corpus/` (human, 1 file per model) · `hiring_synthetic/` (synthetic, per prompt) ·
 `immigration/`, `education/` (synthetic, per prompt × context) · `asr_transcript/` (WER) ·
