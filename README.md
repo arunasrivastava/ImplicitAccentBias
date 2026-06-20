@@ -12,12 +12,19 @@ pronunciation sits from American English (measured by XLS‑R acoustic distance)
 
 ```bash
 conda create --name py310 python=3.10 -y && conda activate py310
-pip install -r requirements.txt
-cp .env.example .env        # fill in keys only for the models you run
+pip install -r requirements.txt        # run the notebooks (figures + dataset loading)
+jupyter lab                            # then open anything in notebooks/
 ```
 
-Open‑weight models (Qwen, Voxtral) need extra installs — see the notes at the top of `requirements.txt`. Remaking the
-figures from the bundled `results/` CSVs needs **neither API keys nor GPUs**.
+Remaking the figures from the bundled `results/` CSVs needs **neither API keys nor GPUs** — `requirements.txt` is all
+you need. To **re‑run the audio pipeline or the model evaluations** from scratch, also:
+
+```bash
+pip install -r requirements-pipeline.txt   # XLS-R/Whisper, model clients, ElevenLabs (heavier)
+cp .env.example .env                        # fill in keys only for the models you run
+```
+
+Open‑weight models (Qwen 3 Omni, Voxtral, Audio Flamingo 3) need a few more installs — see **Local model setup** below.
 
 ## Repository map — where to run what
 
@@ -44,7 +51,6 @@ utils/       shared audio I/O helpers
 | Notebook | Produces |
 |---|---|
 | `Phonological_Distance.ipynb` | Walkthrough of the XLS‑R distance pipeline. |
-| `Figures_Aggregated_Model_Biases.ipynb` | Delivery‑by‑model, content‑vs‑delivery, prompt‑sensitivity figures. |
 | `Figures_Phonolgical_Distance.ipynb` | Acoustic‑distance correlations (per‑speaker, aggregated), phonological‑feature breakdown, and the median‑WER table. |
 | `HuggingFace.ipynb` | Loads the synthetic and (gated) human speech datasets from Hugging Face. |
 | `Figures_Domain_Penalties.ipynb` | Cross-domain framing (paper Fig 2), hiring content-vs-delivery by accent (Fig 3), all-domains stacked (Fig 9). |

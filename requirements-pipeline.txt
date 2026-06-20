@@ -1,0 +1,15 @@
+# Heavier extras to RE-RUN the audio pipeline and model evaluations from scratch.
+# Install on top of requirements.txt:  pip install -r requirements-pipeline.txt
+# (Not needed just to reproduce the figures or load the datasets.)
+
+torch==2.1.0              # XLS-R embeddings + DTW (phonological_distance_pipeline.py)
+transformers>=4.40        # XLS-R 300M + Whisper large-v3
+ffmpeg-python==0.2.0
+
+# Model clients (API keys via .env; see .env.example)
+google-genai              # Gemini (Vertex AI)
+openai                    # GPT-Audio / GPT-4o-audio
+elevenlabs==2.24.0        # synthetic voice generation
+
+# Local open-weight models (Qwen3-Omni, Voxtral, Audio Flamingo 3) need a few
+# more installs — see the "Local model setup" section in the README.

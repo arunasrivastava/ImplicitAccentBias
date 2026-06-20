@@ -1,31 +1,20 @@
-# Core data / numerics
-numpy==1.25.2
-pandas==2.0.3
-scipy==1.13.2
-
-# Plotting
-matplotlib==3.10.7
+# Run the notebooks: reproduce every figure/table and load the datasets.
+# No GPU or API keys needed for this path. (Pinned to the versions the notebooks
+# were validated against.)
+numpy==2.2.6
+pandas==2.3.2
+scipy==1.15.3
+matplotlib==3.10.3
 seaborn==0.13.2
-
-# Stats (stratified_significance.py)
-statsmodels==0.14.2
-
-# Audio I/O
-librosa==0.11.0
 soundfile==0.13.1
-ffmpeg_python==0.2.0
-
-# Embeddings / ASR backbones (phonological_distance_pipeline.py: XLS-R + Whisper)
-torch==2.1.0
-transformers>=4.40
-
-# API model clients
-elevenlabs==2.24.0
-python-dotenv==1.2.1
-
-# Notebooks
+librosa==0.11.0
+datasets==3.6.0
+huggingface_hub==1.0.1
+python-dotenv==1.1.1
 ipython==8.12.3
 ipywidgets==8.1.8
+jupyterlab>=4.0
 
-# NOTE: Qwen3-Omni and Voxtral need extra installs — see README "Local model setup".
-# Gemini (Vertex AI) and GPT-Audio clients are configured via .env credentials.
+# To RE-RUN the audio pipeline / model evaluations (XLS-R, Whisper, the model
+# clients, ElevenLabs TTS), also install the heavier extras:
+#     pip install -r requirements-pipeline.txt
