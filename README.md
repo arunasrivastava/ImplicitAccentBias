@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="results/figures/figure_0.png" width="760"/>
+</p>
+
 # The Cost of Sounding Different: Accent Bias in Audio Language Models
 
 <p align="center">
@@ -7,11 +11,8 @@
   <a href="https://huggingface.co/datasets/multispeak/hiring-accent-speech-human-voices"><img src="https://img.shields.io/badge/🤗%20dataset-human%20voices%20(gated)-FF9D00?labelColor=FFD21E&color=FF9D00" alt="HF: human voices (gated)"/></a>
 </p>
 
-<p align="center">
-  <img src="results/figures/figure_0.png" width="760"/>
-</p>
 
-Audio language models (LMs) are increasingly used to judge how people speak. This repository reproduces our study of whether those models rate English speakers' accents differently, across five accent groups (American, British, Chinese, Indian, Nigerian) and three high‑stakes settings (workplace hiring, academic presentations, English‑proficiency testing). We find that several frontier audio LMs give lower **delivery** scores to Chinese‑ and Nigerian‑accented speakers than to American or British ones, and that a speaker's delivery score falls the further their pronunciation sits from American English (measured by XLS‑R acoustic distance). We demonstrate an implicit bias framework that analyzes biases beyond speech intelligibility, where — despite word error rates below 5% — models demonstrate harmful speaker profile biases.
+Audio language models (LMs) are increasingly used to judge how people speak. This repository reproduces our study of whether those models rate English speakers' accents differently, across five accent groups (American, British, Chinese, Indian, Nigerian) and three high‑stakes settings (workplace hiring, academic presentations, English‑proficiency testing). We find that several frontier audio LMs give lower **delivery** scores to Chinese‑ and Nigerian‑accented speakers than to American or British ones, and that a speaker's delivery score falls the further their pronunciation sits from American English (measured by XLS‑R acoustic distance). We demonstrate an implicit bias framework that analyzes biases beyond speech intelligibility, where — despite word error rates below 5% — models demonstrate harmful speaker profile biases. Explore the repo and take a look at the datasets developed for this study on the multispeak Huggingface (4 hours human spoken data and 19 hours of synthetic speech!)
 
 ## Setup
 
