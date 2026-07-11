@@ -1,12 +1,17 @@
 # The Cost of Sounding Different: Accent Bias in Audio Language Models
 
-Audio language models (LMs) are increasingly used to judge how people speak. This repository reproduces our study of whether those models rate English
-speakers accents differently, across five accent groups (American, British, Chinese, Indian, Nigerian)
-and three high‑stakes settings (workplace hiring, academic presentations, English‑proficiency testing).We find that several frontier audio LMs give lower **delivery** scores to Chinese‑ and
-Nigerian‑accented speakers than to American or British ones, and that a speaker's delivery score falls the further their
-pronunciation sits from American English (measured by XLS‑R acoustic distance). We demonstrate an implicit bias framework that analyzes biases beyond speech intelligibility, where, despite lower word error rates (<5%), models demonstrate harmful speaker profile biases. 
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green.svg" alt="License: MIT"/></a>
+  <img src="https://img.shields.io/badge/python-3.10-3776AB?logo=python&logoColor=white" alt="Python 3.10"/>
+  <a href="https://huggingface.co/datasets/multispeak/accent-synthetic-voices"><img src="https://img.shields.io/badge/🤗%20dataset-synthetic%20voices-FF9D00?labelColor=FFD21E&color=FF9D00" alt="HF: synthetic voices"/></a>
+  <a href="https://huggingface.co/datasets/multispeak/hiring-accent-speech-human-voices"><img src="https://img.shields.io/badge/🤗%20dataset-human%20voices%20(gated)-FF9D00?labelColor=FFD21E&color=FF9D00" alt="HF: human voices (gated)"/></a>
+</p>
 
-![Study overview](results/figures/figure_0.png)
+<p align="center">
+  <img src="results/figures/figure_0.png" width="760"/>
+</p>
+
+Audio language models (LMs) are increasingly used to judge how people speak. This repository reproduces our study of whether those models rate English speakers' accents differently, across five accent groups (American, British, Chinese, Indian, Nigerian) and three high‑stakes settings (workplace hiring, academic presentations, English‑proficiency testing). We find that several frontier audio LMs give lower **delivery** scores to Chinese‑ and Nigerian‑accented speakers than to American or British ones, and that a speaker's delivery score falls the further their pronunciation sits from American English (measured by XLS‑R acoustic distance). We demonstrate an implicit bias framework that analyzes biases beyond speech intelligibility, where — despite word error rates below 5% — models demonstrate harmful speaker profile biases.
 
 ## Setup
 
@@ -62,15 +67,16 @@ utils/       shared audio I/O helpers
 
 ## Data
 
-Audio is **not** stored in this repo — it lives in two Hugging Face datasets under the multispeak organization, with
-speaker IDs matching the CSVs in `results/` (see [`notebooks/HuggingFace.ipynb`](notebooks/HuggingFace.ipynb) for loading):
+Audio is **not** stored in this repo — it lives in two Hugging Face datasets under the [multispeak](https://huggingface.co/multispeak) organization, with speaker IDs matching the CSVs in `results/` (see [`notebooks/HuggingFace.ipynb`](notebooks/HuggingFace.ipynb) for loading):
 
-- [`multispeak/accent-synthetic-voices`](https://huggingface.co/datasets/multispeak/accent-synthetic-voices) — **public**; ~19 h / 1,079 clips, 30 ElevenLabs voices across three domains (`hiring`, `presentation`, `english-test`) via a `domain` column. Also regenerable via `python models/run_elevenlabs.py`.
-- [`multispeak/hiring-accent-speech-human-voices`](https://huggingface.co/datasets/multispeak/hiring-accent-speech-human-voices) — **gated** human recordings (request access). 5 of the 52 speakers are omitted here because they did not consent to recording release; their de‑identified ratings still appear in `results/`.
+| Dataset | Access | License | Contents |
+|---|---|---|---|
+| [`multispeak/accent-synthetic-voices`](https://huggingface.co/datasets/multispeak/accent-synthetic-voices) | public | CC BY 4.0 | ~19 h · 1,079 clips · 30 ElevenLabs voices across three domains (`hiring`, `presentation`, `english-test`) |
+| [`multispeak/hiring-accent-speech-human-voices`](https://huggingface.co/datasets/multispeak/hiring-accent-speech-human-voices) | gated (request access) | CC BY-NC 4.0 | ~4.3 h · 282 clips · 47 human speakers, scripted + unscripted hiring prompts |
 
-The CSVs in `results/` hold everything needed to reproduce the figures without any audio. See `.env.example` for credentials.
+The CSVs in `results/` hold everything needed to reproduce the figures without any audio. The synthetic dataset is also regenerable via `python models/run_elevenlabs.py` (needs `ELEVENLABS_API_KEY`). See `.env.example` for credentials.
 
-Human‑corpus participant names are replaced with stable IDs (`speaker_01`, …) throughout the CSVs and notebooks — including model‑output text, where speakers' self‑introductions are sometimes echoed — while ElevenLabs voice names and all speaker metadata are retained.
+Human‑corpus participant names are replaced with stable IDs (`speaker_01`, …) throughout the CSVs and notebooks — including model‑output text, where speakers' self‑introductions are sometimes echoed — while ElevenLabs voice names and all speaker metadata are retained. 5 of the 52 study speakers are omitted from the audio release (did not consent); their de‑identified ratings still appear in `results/`.
 
 ## Key figures
 
